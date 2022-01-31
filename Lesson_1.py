@@ -1,46 +1,29 @@
-pt1 = (0, 2)
-pt2 = (2, 5)
-pt3 = (5, 2)
-pt4 = (6, 6)
-pt5 = (8, 3)
+def way(x, y):
+    return ((y[0] - x[0]) ** 2 + (y[1] - x[1]) ** 2) ** 0.5
 
-way12 = ((pt2[0] - pt1[0]) ** 2 + (pt2[1] - pt1[1]) ** 2) ** 0.5
-way13 = ((pt3[0] - pt1[0]) ** 2 + (pt3[1] - pt1[1]) ** 2) ** 0.5
-way14 = ((pt4[0] - pt1[0]) ** 2 + (pt4[1] - pt1[1]) ** 2) ** 0.5
-way15 = ((pt5[0] - pt1[0]) ** 2 + (pt5[1] - pt1[1]) ** 2) ** 0.5
 
-if way12 <= way13 and way12 <= way14 and way12 <= way15:
-    min_way1 = way12
-elif way13 <= way12 and way13 <= way14 and way13 <= way15:
-    min_way1 = way13
-elif way14 <= way12 and way14 <= way13 and way14 <= way15:
-    min_way1 = way14
-elif way15 <= way12 and way15 <= way13 and way15 <= way14:
-    min_way1 = way15
+def rec(st_pt, f_pt):
+    way0 = 1000
+    min_way = []
+    global res_way, pt1, res_dist
+    for i in range(len(f_pt)):
+        if way(st_pt, f_pt[i]) <= way0:
+            way0 = way(st_pt, f_pt[i])
+            min_way = (f_pt[i], way0)
+    f_pt.remove(min_way[0])
+    st_pt = min_way[0]
+    res_way.append(min_way[0])
+    res_dist.append(min_way[1])
+    if len(f_pt) != 0:
+        return rec(st_pt, f_pt)
+    lst_step = way(st_pt, pt1)
+    print(res_way, res_dist)
+    return print(f"{pt1} -> {res_way[0]}{[res_dist[0]]} -> {res_way[1]}{[res_dist[0] + res_dist[1]]} -> {res_way[2]}"
+                 f"{[res_dist[0] + res_dist[1] + res_dist[2]]} -> {res_way[3]}{[sum(res_dist)]} -> {pt1}"
+                 f"{[sum(res_dist) + lst_step]} = {sum(res_dist) + lst_step}")
 
-way23 = ((pt3[0] - pt2[0]) ** 2 + (pt3[1] - pt2[1]) ** 2) ** 0.5
-way24 = ((pt4[0] - pt2[0]) ** 2 + (pt4[1] - pt2[1]) ** 2) ** 0.5
-way25 = ((pt5[0] - pt2[0]) ** 2 + (pt5[1] - pt2[1]) ** 2) ** 0.5
 
-if way23 <= way24 and way23 <= way25:
-    min_way2 = way23
-elif way24 <= way23 and way24 <= way25:
-    min_way2 = way24
-elif way25 <= way23 and way25 <= way24:
-    min_way2 = way25
-
-way43 = ((pt3[0] - pt4[0]) ** 2 + (pt3[1] - pt4[1]) ** 2) ** 0.5
-way45 = ((pt5[0] - pt4[0]) ** 2 + (pt5[1] - pt4[1]) ** 2) ** 0.5
-
-if way43 <= way45:
-    min_way3 = way43
-else:
-    min_way3 = way45
-
-way53 = ((pt3[0] - pt5[0]) ** 2 + (pt3[1] - pt5[1]) ** 2) ** 0.5
-min_way4 = way53
-
-way31 = ((pt1[0] - pt3[0]) ** 2 + (pt1[1] - pt3[1]) ** 2) ** 0.5
-min_way5 = way31
-
-print(f"{pt1} -> {pt2}{[way12]} -> {pt4}{[way12 + way24]} -> {pt5}{[way12 + way24 + way45]} -> {pt3}{[way12 + way24 + way45 + way53]} -> {pt1}{[way12 + way24 + way45 + way53 + way31]} = {way12 + way24 + way45 + way53 + way31}")
+pt1, pt2, pt3, pt4, pt5 = (0, 2), (2, 5), (5, 2), (6, 6), (8, 3)
+pt = [pt2, pt3, pt4, pt5]
+res_way, res_dist = [], []
+rec(pt1, pt)
