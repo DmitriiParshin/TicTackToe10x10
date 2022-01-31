@@ -17,13 +17,12 @@ def rec(st_pt, f_pt):
     if len(f_pt) != 0:
         return rec(st_pt, f_pt)
     lst_step = way(st_pt, pt1)
-    print(res_way, res_dist)
     return print(f"{pt1} -> {res_way[0]}{[res_dist[0]]} -> {res_way[1]}{[res_dist[0] + res_dist[1]]} -> {res_way[2]}"
                  f"{[res_dist[0] + res_dist[1] + res_dist[2]]} -> {res_way[3]}{[sum(res_dist)]} -> {pt1}"
                  f"{[sum(res_dist) + lst_step]} = {sum(res_dist) + lst_step}")
 
 
-pt1, pt2, pt3, pt4, pt5 = (0, 2), (2, 5), (5, 2), (6, 6), (8, 3)
+pt1, pt2, pt3, pt4, pt5 = (0, 2), (8, 3), (6, 6), (2, 5), (5, 2)
 pt = [pt2, pt3, pt4, pt5]
 res_way, res_dist = [], []
 rec(pt1, pt)
