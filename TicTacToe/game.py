@@ -2,8 +2,7 @@
 import random
 import tkinter
 from tkinter import messagebox
-
-# Объявляем глобальные переменные
+# Объявляем глобальные переменные в пикселях
 CELL_SIZE = 50
 FIELD_SIZE = 10
 WIDTH = 500
@@ -43,8 +42,8 @@ def main():
 # Создаём класс в котором будет работа с графикой
 class Window:
     # Создаём поле/холст в окне белым цветом
-    def __init__(self, root):
-        self.game_window = tkinter.Canvas(root, width=WIDTH, height=WIDTH, bg='white')
+    def __init__(self, rt):
+        self.game_window = tkinter.Canvas(rt, width=WIDTH, height=WIDTH, bg='white')
         self.game_window.pack()
 
     # Создаём сетку, сначала внешние линии, потом внутренние
@@ -75,34 +74,29 @@ class Game:
         # Создаём массив и заполняем его нулями - это будет наше поле
         self.dot_field = [[0 for _ in range(FIELD_SIZE)] for _ in range(FIELD_SIZE)]
 
-    # Создаём функцию проверки победы(горизонт, вертикаль и две диагонали)
-    def check_win(self, color):
+    # Создаём функцию проверки победы(горизонт, вертикаль и две диагонали), если находит подряд 5 одинаковых,
+    # заполненных клеточек, возвращает Тру
+    def check_win(self):
         for i in range(FIELD_SIZE):
             for j in range(FIELD_SIZE - 4):
                 if self.dot_field[i][j] == self.dot_field[i][j + 1] == self.dot_field[i][j + 2] == \
                         self.dot_field[i][j + 3] == self.dot_field[i][j + 4] != 0:
-                    # Если обнаружили пять в ряд одного типа, то вызываем мессежбокс
-                    # в котором пишем кто проиграл и закрываем игру
-                    messagebox.showinfo("GAME OVER", "Человечек lose!" if color == 'blue' else "Компутер lose!")
-                    root.destroy()
+                    return True
         for i in range(FIELD_SIZE - 4):
             for j in range(FIELD_SIZE):
                 if self.dot_field[i][j] == self.dot_field[i + 1][j] == self.dot_field[i + 2][j] == \
                         self.dot_field[i + 3][j] == self.dot_field[i + 4][j] != 0:
-                    messagebox.showinfo("GAME OVER", "Человечек lose!" if color == 'blue' else "Компутер lose!")
-                    root.destroy()
+                    return True
         for i in range(FIELD_SIZE - 4):
             for j in range(FIELD_SIZE - 4):
                 if self.dot_field[i][j] == self.dot_field[i + 1][j + 1] == self.dot_field[i + 2][j + 2] == \
                         self.dot_field[i + 3][j + 3] == self.dot_field[i + 4][j + 4] != 0:
-                    messagebox.showinfo("GAME OVER", "Человечек lose!" if color == 'blue' else "Компутер lose!")
-                    root.destroy()
+                    return True
         for i in range(FIELD_SIZE - 4):
             for j in range(4, FIELD_SIZE):
                 if self.dot_field[i][j] == self.dot_field[i + 1][j - 1] == self.dot_field[i + 2][j - 2] == \
                         self.dot_field[i + 3][j - 3] == self.dot_field[i + 4][j - 4] != 0:
-                    messagebox.showinfo("GAME OVER", "Человечек lose!" if color == 'blue' else "Компутер lose!")
-                    root.destroy()
+                    return True
 
     # Создаём функцию для хода компутера
     def computer_move(self, window):
@@ -114,7 +108,11 @@ class Game:
             self.dot_field[y][x] = 2
             color = 'red'
             window.draw_o(x, y, color)
-            self.check_win(color)
+            # Проверяем на победу, если функция проверки == Тру, то вызываем
+            # всплывающее сообщение с надписью о проигравшем и закрываем окно с игрой
+            if self.check_win():
+                messagebox.showinfo("GAMEOVER!!!", "Компутер проиграл(((")
+                root.destroy()
         else:
             return self.computer_move(window)
 
@@ -132,7 +130,10 @@ class Game:
             self.dot_field[y][x] = 1
             color = 'blue'
             window.draw_x(x, y, color)
-            self.check_win(color)
+            if self.check_win():
+                messagebox.showinfo("GAMEOVER!!!", "Человечек проиграл(((")
+                root.destroy()
+                return False
             return True
         else:
             return False
